@@ -129,7 +129,7 @@
             // Select a voice that closely resembles JARVIS
             const voices = synth.getVoices();
             utterance.voice = voices.find(voice => voice.name === 'Google UK English Male') || voices[0];
-            utterance.pitch = 1; // Set pitch (0 to 2)
+            utterance.pitch = 2; // Set pitch (0 to 2)
             utterance.rate = 1; // Set rate (0.1 to 10)
 
             synth.speak(utterance);
@@ -169,44 +169,99 @@
         });
 
         async function handleCommand(message) {
-            if (message.includes('hey') || message.includes('hello')) {
-                speak("Hello, How May I Help You?");
-            } else if (message.includes("open google")) {
-                window.open("https://google.com", "_blank");
-                speak("Opening Google...");
-            } else if (message.includes("open youtube")) {
-                window.open("https://youtube.com", "_blank");
-                speak("Opening YouTube...");
-            } else if (message.includes("open facebook")) {
-                window.open("https://facebook.com", "_blank");
-                speak("Opening Facebook...");
-            } else if (message.includes('time')) {
-                const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" });
-                speak(time);
-            } else if (message.includes('date')) {
-                const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" });
-                speak(date);
-            } else {
-                try {
-                    const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer sk-None-7OTMwDe76npxC91DNQtCT3BlbkFJ8W2WNxW1ekTUTGVDEp0t`
-                        },
-                        body: JSON.stringify({
-                            prompt: message,
-                            max_tokens: 50
-                        })
-                    });
-                    const data = await response.json();
-                    const answer = data.choices[0].text.trim();
-                    speak(answer);
-                } catch (error) {
-                    speak("I'm sorry, I didn't understand that command.");
-                }
-            }
-        }
+    if (message.includes('hey') || message.includes('hello')) {
+        speak("Hello, How May I Help You?");
+    } else if (message.includes("open google")) {
+        window.open("https://google.com", "_blank");
+        speak("Opening Google...");
+    } else if (message.includes("open youtube")) {
+        window.open("https://youtube.com", "_blank");
+        speak("Opening YouTube...");
+    } else if (message.includes("open facebook")) {
+        window.open("https://facebook.com", "_blank");
+        speak("Opening Facebook...");
+    } else if (message.includes("open whatsapp")) {
+        window.open("https://whatsapp.com", "_blank");
+        speak("Opening WhatsApp...");
+    } else if (message.includes("open gmail")) {
+        window.open("https://gmail.com", "_blank");
+        speak("Opening Gmail...");
+    } else if (message.includes("open snapchat")) {
+        window.open("https://snapchat.com", "_blank");
+        speak("Opening Snapchat...");
+    } else if (message.includes("open instagram")) {
+        window.open("https://instagram.com", "_blank");
+        speak("Opening Instagram...");
+    } else if (message.includes('time')) {
+        const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" });
+        speak(time);
+    } else if (message.includes('date')) {
+        const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" });
+        speak(date);
+    } else if (message.includes('weather')) {
+        const weather = await getWeather(); // Assume this function fetches weather info
+        speak(`The current weather is ${weather}`);
+    } else if (message.includes('joke')) {
+        const joke = await getJoke(); // Assume this function fetches a joke
+        speak(joke);
+    } else if (message.includes('search')) {
+        const query = message.replace('search', '').trim();
+        window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, "_blank");
+        speak(`Searching for ${query} on Google...`);
+    } else if (message.includes('news')) {
+        const news = await getNews(); // Assume this function fetches news headlines
+        speak(`Here are the latest headlines: ${news}`);
+    } else if (message.includes('music')) {
+        window.open("https://spotify.com", "_blank");
+        speak("Opening Spotify...");
+    } else if (message.includes('translate')) {
+        const text = message.replace('translate', '').trim();
+        window.open(`https://translate.google.com/?sl=en&tl=es&text=${encodeURIComponent(text)}`, "_blank"); // Example translating to Spanish
+        speak(`Translating to Spanish: ${text}`);
+    } else if (message.includes('calculator')) {
+        window.open("https://www.desmos.com/calculator", "_blank");
+        speak("Opening Calculator...");
+    } else if (message.includes('maps')) {
+        window.open("https://maps.google.com", "_blank");
+        speak("Opening Google Maps...");
+    } else if (message.includes('stocks')) {
+        window.open("https://finance.yahoo.com", "_blank");
+        speak("Opening stock market information...");
+    } else if (message.includes('dictionary')) {
+        const word = message.replace('define', '').trim();
+        window.open(`https://www.merriam-webster.com/dictionary/${encodeURIComponent(word)}`, "_blank");
+        speak(`Looking up the definition of ${word}...`);
+    } else if (message.includes('convert')) {
+        const [amount, from, to] = message.replace('convert', '').trim().split(' ');
+        window.open(`https://www.x-rates.com/calculator/?from=${from}&to=${to}&amount=${amount}`, "_blank");
+        speak(`Converting ${amount} ${from} to ${to}...`);
+    } else if (message.includes('news')) {
+        window.open("https://news.google.com", "_blank");
+        speak("Opening Google News...");
+    } else if (message.includes('email')) {
+        window.open("mailto:example@example.com", "_blank"); // Change email address as needed
+        speak("Opening your email client...");
+    } else if (message.includes('call')) {
+        window.open("tel:100"); // Replace with your phone number
+        speak("Dialing your phone...");
+    } else {
+        speak("I'm sorry, I didn't understand that.");
+    }
+}
+
+// Dummy functions for weather, joke, and news
+async function getWeather() {
+    return "Sunny, 25°C"; // Replace with actual API call
+}
+
+async function getJoke() {
+    return "Why don't scientists trust atoms? Because they make up everything!"; // Replace with actual API call
+}
+
+async function getNews() {
+    return "Breaking news: Example news headline."; // Replace with actual API call
+}
+
     </script>
 </body>
 
